@@ -2,6 +2,7 @@ from psychopy import visual, core, event, gui
 import json
 import os
 import sys
+from utils import flicker
 
 
 mental = [182, 250, 270, 286]
@@ -56,10 +57,11 @@ def run():
 
     globalTimer = core.Clock()
     start_time = globalTimer.getTime()
+    flicker(win, 4)
     day_time = core.getAbsTime()
 
     win.flip()
-    core.wait(10)
+    core.wait(5)
     win.flip()
 
     while mov.status != visual.FINISHED:
@@ -73,6 +75,7 @@ def run():
             core.quit()
 
     stop_time = globalTimer.getTime()
+    flicker(win, 16)
 
     save_data(day_time, start_time, stop_time, participant)
 
