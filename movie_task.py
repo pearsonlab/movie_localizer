@@ -3,6 +3,7 @@ import json
 import os
 import sys
 from utils import flicker
+from datetime import datetime
 
 
 mental = [182, 250, 270, 286]
@@ -17,12 +18,13 @@ conds(3).durs = [6, 10, 2, 6, 4]; % social
 conds(4).durs = [6, 10, 8]
 '''
 
-def save_data(day_time, start_time, stop_time, participant):
+def save_data(day_time_start, day_time_stop, start_time, stop_time, participant):
 
     trial = {}
-    trial['day_time'] = day_time
-    trial['start_time'] = start_time
-    trial['stop_time'] = stop_time
+    trial['wall_start_time'] = day_time_start
+    trial['wall_stop_time'] = day_time_stop
+    trial['psychopy_start_time'] = start_time
+    trial['psychopy_stop_time'] = stop_time
 
     trial['mental'] = mental
     trial['pain'] = pain
@@ -58,8 +60,9 @@ def run():
     globalTimer = core.Clock()
     start_time = globalTimer.getTime()
     flicker(win, 4)
-    day_time = core.getAbsTime()
-
+    
+    t = datetime.now()
+    day_time_start = '%d:%d:%d:%d' % (t.hour, t.minute, t.second, t.microsecond)
     win.flip()
     core.wait(5)
     win.flip()
@@ -71,13 +74,17 @@ def run():
         if event.getKeys(keyList=['escape','q']):
             win.close()
             stop_time = globalTimer.getTime()
-            save_data(day_time, start_time, stop_time, participant)
+            t = datetime.now()
+            day_time_stop = '%d:%d:%d:%d' % (t.hour, t.minute, t.second, t.microsecond)
+            save_data(day_time_start, day_time_stop, start_time, stop_time, participant)
             core.quit()
 
+    t = datetime.now()
+    day_time_stop = '%d:%d:%d:%d' % (t.hour, t.minute, t.second, t.microsecond)
     stop_time = globalTimer.getTime()
     flicker(win, 16)
 
-    save_data(day_time, start_time, stop_time, participant)
+    save_data(day_time_start, day_time_stop, start_time, stop_time, participant)
 
     core.quit()
 
