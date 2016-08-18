@@ -2,7 +2,7 @@ from psychopy import visual, core, event, gui
 import json
 import os
 import sys
-from utils import flicker
+from utils import Flicker
 from datetime import datetime
 
 
@@ -54,19 +54,18 @@ def run():
     win = visual.Window(winType='pyglet', monitor="testMonitor", units="pix", screen=1,
             fullscr=True, colorSpace='rgb255', color=(0, 0, 0))
     win.mouseVisible = False
+    trigger = Flicker(win)
     mov = visual.MovieStim3(win, 'partly_cloudy.mp4', size=[1440,850],
                        flipVert=False, flipHoriz=False, loop=False)
 
     globalTimer = core.Clock()
     start_time = globalTimer.getTime()
-    flicker(win, 4)
+    
     
     t = datetime.now()
     day_time_start = '%d:%d:%d:%d' % (t.hour, t.minute, t.second, t.microsecond)
-    win.flip()
-    core.wait(5)
-    win.flip()
 
+    trigger.flicker_block(4)
     while mov.status != visual.FINISHED:
         mov.draw()
         win.flip()
@@ -82,7 +81,7 @@ def run():
     t = datetime.now()
     day_time_stop = '%d:%d:%d:%d' % (t.hour, t.minute, t.second, t.microsecond)
     stop_time = globalTimer.getTime()
-    flicker(win, 16)
+    trigger.flicker_block(16)
 
     save_data(day_time_start, day_time_stop, start_time, stop_time, participant)
 
